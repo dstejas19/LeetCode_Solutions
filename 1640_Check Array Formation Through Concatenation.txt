@@ -1,0 +1,30 @@
+class Solution {
+public:
+    bool canFormArray(vector<int>& arr, vector<vector<int>>& pieces) {
+        map<int, int> m;
+        int size = arr.size();
+        for(int i=0;i<size - 1;i++) {
+            m.insert({arr[i], arr[i+1]});
+        }
+        m.insert({arr[size-1], -1});
+        
+        for(int i=0;i<pieces.size();i++) {
+            int psize = pieces[i].size();
+            for(int j=0;j<psize;j++) {
+                if(m.find(pieces[i][j]) == m.end()) {
+                    return false;
+                }
+                if(psize != 1) {
+                    if(j != psize - 1) {
+                        if(m[pieces[i][j]] != pieces[i][j+1]) {
+                            return false;
+                        }
+                    }
+                }
+                m.erase(pieces[i][j]);
+            }
+        }
+        
+        return true;
+    }
+};
