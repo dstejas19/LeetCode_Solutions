@@ -1,0 +1,23 @@
+class Solution {
+public:
+    int numPairsDivisibleBy60(vector<int>& time) {
+        int pairs = 0, size = time.size();
+        unordered_map<int, int> m;
+        
+        for(int i=0;i<size;i++) {
+            int temp = time[i] % 60;
+            if(m.find((60 - temp) % 60) != m.end()) {
+                pairs += m[(60 - temp)%60];
+            }
+            
+            if(m.find(temp) != m.end()) {
+                m[temp]++;
+            }
+            else {
+                m.insert({temp, 1});
+            }
+        }
+        
+        return pairs;
+    }
+};
