@@ -1,0 +1,41 @@
+class Solution {
+public:
+    int segTree[4*100001];
+    
+    int createSortedArray(vector<int>& instructions) {
+        int cost = 0;
+        
+        for(int i=0;i<instructions.size();i++) {
+            int left = query(1, instructions[i]-1, 1, 100000, 1);
+            int right = query(instructions[i]+1, 100000, 1, 100000, 1);
+            cost = (cost + min(left, right))%1000000007;
+            update(instructions[i], 1, 100000, 1);
+        }
+        return cost;
+    }
+    
+    int query(int qlow, int qhigh, int low, int high, int pos) {
+        if(qlow <= low && qhigh >= high) {
+            return segTree[pos];
+        }
+        if(qlow > high || qhigh < low) {
+            return 0;
+        }
+        int mid = low + (high - low)/2;
+        return query(qlow, qhigh, low, mid, pos*2) + query(qlow, qhigh, mid+1, high, (2*pos)+1);
+    }
+    
+    void update(int qpos, int low, int high, int pos) {
+        if(low > qpos || qpos > high) {
+            return;
+        }
+        if(low == high) {
+            segTree[pos]++;
+            return;
+        }
+        int mid = low + (high - low)/2;
+        update(qpos, low, mid, pos*2);
+        update(qpos, mid+1, high, (pos*2)+1);
+        segTree[pos] = segTree[(2*pos)] + segTree[(2*pos)+1];
+    }
+};
